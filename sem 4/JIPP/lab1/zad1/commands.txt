@@ -1,0 +1,4 @@
+gcc *.c -c -Wextra -Wall -Werror -pedantic -std=c99
+ar -rcs libc.a *.o
+gcc test.c -L. -lc -o test -Wextra -Wall -Werror -pedantic -std=c99
+ar -t libloop.a 
