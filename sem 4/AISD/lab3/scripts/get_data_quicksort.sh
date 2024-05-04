@@ -14,15 +14,13 @@ modes=(-i -d -n)
 k=100
 N=()
 
-rm -rf ../data/quicksort/*
-
 for ((i=1; i<101; i++)); do
     N+=( $((100*$i)) )
 done
-
-for program in ${programs[@]}; do
-    for mode in ${modes[@]}; do
-        echo "n,c,s,c/(n*ln(n)),s/(n*ln(n)),c/(n*n),s/(n*n)" >> "../data/quicksort/$program$mode.csv"
+for mode in ${modes[@]}; do
+    rm -rf ../data/quicksort/$mode/*
+    for program in ${programs[@]}; do
+        echo "n,c,s,c/(n*ln(n)),s/(n*ln(n)),c/(n*n),s/(n*n)" >> "../data/quicksort/$mode/$program$mode.csv"
         for n in ${N[@]}; do
             comparisons=()
             swaps=()
@@ -36,7 +34,7 @@ for program in ${programs[@]}; do
             avg_comparisons=$(average ${comparisons[@]})
             avg_swaps=$(average ${swaps[@]})
 
-            echo $n,$avg_comparisons,$avg_swaps,$(echo "scale=2; $avg_comparisons / ($n * l($n))" | bc -l),$(echo "scale=2; $avg_swaps / ($n * l($n))" | bc -l),$(echo "scale=2; $avg_comparisons / ($n * $n)" | bc),$(echo "scale=2; $avg_swaps / ($n * $n)" | bc) >> "../data/quicksort/$program$mode.csv"
+            echo $n,$avg_comparisons,$avg_swaps,$(echo "scale=2; $avg_comparisons / ($n * l($n))" | bc -l),$(echo "scale=2; $avg_swaps / ($n * l($n))" | bc -l),$(echo "scale=2; $avg_comparisons / ($n * $n)" | bc),$(echo "scale=2; $avg_swaps / ($n * $n)" | bc) >> "../data/quicksort/$mode/$program$mode.csv"
         done
     done
 done 
