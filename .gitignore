@@ -5,6 +5,9 @@
 # Except for "Dockerfile"
 !Dockerfile
 
+#csvs
+*.csv
+
 # VS Code
 .vscode/
 
