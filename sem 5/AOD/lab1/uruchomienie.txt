@@ -1,0 +1,2 @@
+./bin/dfs_demonstration /home/wiktor/Desktop/AOD/lab1/aod_testy1/1/g4d.txt -p
+./bin/bfs_demonstration /home/wiktor/Desktop/AOD/lab1/aod_testy1/1/g4d.txt -p

@@ -38,9 +38,9 @@ void dfs(Graph g, bool print_flag, bool save_tree_flag)
                 std::cout << current_vertex + 1 << "\n";
             }
 
-
             visited[current_vertex] = true;
-            for (const auto &neighbour : g.get_neighbours(current_vertex))
+            std::vector<int> neighbours = g.get_neighbours(current_vertex);
+            for (const auto &neighbour : neighbours)
             {
                 if (!visited[neighbour])
                 {
@@ -72,26 +72,27 @@ void bfs(Graph g, bool print_flag, bool save_tree_flag)
         current_vertex = queue.front().second;
         queue.pop();
 
-            if (save_tree_flag)
-            {
-                std::ofstream out_file;
-                out_file.open("/home/wiktor/Desktop/AOD/lab1/tree.txt", std::ios_base::app);
-                out_file << parent + 1 << " " << current_vertex + 1 << "\n";
-                out_file.close();
-            }
+        if (save_tree_flag)
+        {
+            std::ofstream out_file;
+            out_file.open("/home/wiktor/Desktop/AOD/lab1/tree.txt", std::ios_base::app);
+            out_file << parent + 1 << " " << current_vertex + 1 << "\n";
+            out_file.close();
+        }
 
-            if (print_flag)
+        if (print_flag)
+        {
+            std::cout << current_vertex + 1 << "\n";
+        }
+        
+        std::vector<int> neighbours = g.get_neighbours(current_vertex);
+        for (const auto &neighbour : neighbours)
+        {
+            if (!visited[neighbour])
             {
-                std::cout << current_vertex + 1 << "\n";
+                visited[neighbour] = true;
+                queue.push(std::make_pair(current_vertex, neighbour));
             }
-
-            for (const auto &neighbour : g.get_neighbours(current_vertex))
-            {
-                if (!visited[neighbour])
-                {
-                    visited[neighbour] = true;
-                    queue.push(std::make_pair(current_vertex, neighbour));
-                }
-            }
+        }
     }
 }
