@@ -33,6 +33,7 @@ bool is_acyclic(Graph g, bool print_flag)
     {
         current_vertex = vertices_no_incoming_edges.top();
         vertices_no_incoming_edges.pop();
+        //std::cout << current_vertex + 1 << "\n";
         sorted_verticies.push_back(current_vertex);
 
         std::vector<int> neighbours = vertecies_to[current_vertex];

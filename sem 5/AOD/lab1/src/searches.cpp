@@ -12,6 +12,7 @@ void dfs(Graph g, bool print_flag, bool save_tree_flag)
         out_file.close();
     }
 
+    std::vector<std::vector<int>> edges = g.get_edges_when_loaded();
     std::vector<bool> visited = std::vector<bool>(g.get_vertex_num(), false);
     std::stack<std::pair<int, int>> stack;
     stack.push(std::make_pair(0, 0));
@@ -39,8 +40,7 @@ void dfs(Graph g, bool print_flag, bool save_tree_flag)
             }
 
             visited[current_vertex] = true;
-            std::vector<int> neighbours = g.get_neighbours(current_vertex);
-            for (const auto &neighbour : neighbours)
+            for (const auto &neighbour : edges[current_vertex])
             {
                 if (!visited[neighbour])
                 {
@@ -60,6 +60,7 @@ void bfs(Graph g, bool print_flag, bool save_tree_flag)
         out_file.close();
     }
 
+    std::vector<std::vector<int>> edges = g.get_edges_when_loaded();
     std::vector<bool> visited = std::vector<bool>(g.get_vertex_num(), false);
     std::queue<std::pair<int, int>> queue;
     queue.push(std::make_pair(0, 0));
@@ -84,9 +85,8 @@ void bfs(Graph g, bool print_flag, bool save_tree_flag)
         {
             std::cout << current_vertex + 1 << "\n";
         }
-        
-        std::vector<int> neighbours = g.get_neighbours(current_vertex);
-        for (const auto &neighbour : neighbours)
+
+        for (const auto &neighbour : edges[current_vertex])
         {
             if (!visited[neighbour])
             {
