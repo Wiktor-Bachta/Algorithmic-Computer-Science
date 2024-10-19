@@ -2,8 +2,8 @@
 #define BIPARTITE_DFS_HPP
 
 #include "Graph.hpp"
-#include <iostream>
 #include <stack>
+#include <algorithm>
 
 bool is_bapartite(Graph &graph, bool print_flag);
 

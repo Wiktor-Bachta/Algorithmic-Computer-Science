@@ -1,13 +1,11 @@
 #include "Graph.hpp"
 #include "searches.hpp"
-#include <stack>
-#include <queue>
 
 void dfs(Graph &graph, bool print_flag, bool save_tree_flag)
 {
     if (save_tree_flag)
     {
-        std::ofstream out_file("/home/wiktor/Desktop/AOD/lab1/tree.txt");
+        std::ofstream out_file("./tree.txt");
         out_file << graph.vertex_num << "\n";
         out_file.close();
     }
@@ -28,7 +26,7 @@ void dfs(Graph &graph, bool print_flag, bool save_tree_flag)
             if (save_tree_flag)
             {
                 std::ofstream out_file;
-                out_file.open("/home/wiktor/Desktop/AOD/lab1/tree.txt", std::ios_base::app);
+                out_file.open("./tree.txt", std::ios_base::app);
                 out_file << parent + 1 << " " << current_vertex + 1 << "\n";
                 out_file.close();
             }
@@ -54,7 +52,7 @@ void bfs(Graph &graph, bool print_flag, bool save_tree_flag)
 {
     if (save_tree_flag)
     {
-        std::ofstream out_file("/home/wiktor/Desktop/AOD/lab1/tree.txt");
+        std::ofstream out_file("./tree.txt");
         out_file << graph.vertex_num << "\n";
         out_file.close();
     }
@@ -74,7 +72,7 @@ void bfs(Graph &graph, bool print_flag, bool save_tree_flag)
         if (save_tree_flag)
         {
             std::ofstream out_file;
-            out_file.open("/home/wiktor/Desktop/AOD/lab1/tree.txt", std::ios_base::app);
+            out_file.open("./tree.txt", std::ios_base::app);
             out_file << parent + 1 << " " << current_vertex + 1 << "\n";
             out_file.close();
         }

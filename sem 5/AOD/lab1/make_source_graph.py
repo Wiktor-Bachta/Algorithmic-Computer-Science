@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 
-with open("/home/wiktor/Desktop/AOD/lab1/aod_testy1/4/d4a-moj.txt", "r") as input_file:
+with open("./aod_testy1/4/d4a-moj.txt", "r") as input_file:
     directed = False
     if input_file.readline().strip() == "D":
         directed = True

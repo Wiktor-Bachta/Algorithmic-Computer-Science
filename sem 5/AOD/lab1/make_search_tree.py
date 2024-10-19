@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 
-with open("/home/wiktor/Desktop/AOD/lab1/tree.txt", "r") as input_file:
+with open("./tree.txt", "r") as input_file:
     vertex_num = int(input_file.readline())
     edges = []
 

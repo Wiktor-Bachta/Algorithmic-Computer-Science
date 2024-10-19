@@ -3,8 +3,6 @@
 
 #include "Graph.hpp"
 #include <stack>
-#include <iostream>
-#include <vector>
 
 std::vector<std::vector<int>> get_connected_components(Graph &graph);
 

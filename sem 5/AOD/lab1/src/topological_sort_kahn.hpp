@@ -3,7 +3,6 @@
 
 #include "Graph.hpp"
 #include <stack>
-#include <iostream>
 
 bool is_acyclic(Graph &graph, bool print_flag);
 

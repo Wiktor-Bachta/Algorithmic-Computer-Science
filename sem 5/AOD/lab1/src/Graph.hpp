@@ -2,12 +2,8 @@
 #define GRAPH_HPP
 
 #include <vector>
-#include <random>
-#include <iostream>
-#include <algorithm>
-#include <limits>
-#include <iomanip>
 #include <string>
+#include <iostream>
 #include <fstream>
 
 class Graph

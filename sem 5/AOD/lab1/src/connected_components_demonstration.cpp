@@ -1,7 +1,5 @@
 #include "Graph.hpp"
 #include "connected_components_tarjan.hpp"
-#include <string.h>
-#include <iostream>
 
 int main(int, char *argv[])
 {

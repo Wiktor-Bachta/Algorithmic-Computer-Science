@@ -1,11 +1,8 @@
 #include "Graph.hpp"
 #include "bipartite_dfs.hpp"
-#include <string.h>
-#include <iostream>
 
 int main(int, char *argv[])
 {
-
     std::string filename = std::string(argv[1]);
 
     Graph g = Graph(filename);

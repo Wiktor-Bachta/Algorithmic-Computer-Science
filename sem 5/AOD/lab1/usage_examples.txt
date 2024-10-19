@@ -1,8 +1,8 @@
-./bin/dfs_demonstration /home/wiktor/Desktop/AOD/lab1/aod_testy1/1/g4d.txt -p
-./bin/bfs_demonstration /home/wiktor/Desktop/AOD/lab1/aod_testy1/1/g4d.txt -p
-./bin/topological_sort_demonstration /home/wiktor/Desktop/AOD/lab1/aod_testy1/2/g2a-1.txt
-./bin/connected_components_demonstration /home/wiktor/Desktop/AOD/lab1/aod_testy1/3/g3-1.txt
-./bin/bipartite_demonstration /home/wiktor/Desktop/AOD/lab1/aod_testy1/4/d4a-1.txt
+./bin/dfs_demonstration ./aod_testy1/1/g4d.txt -p
+./bin/bfs_demonstration ./aod_testy1/1/g4d.txt -p
+./bin/topological_sort_demonstration ./aod_testy1/2/g2a-1.txt
+./bin/connected_components_demonstration ./aod_testy1/3/g3-1.txt
+./bin/bipartite_demonstration ./aod_testy1/4/d4a-1.txt
 
 
 zwiększenie stacku do zad 3:

@@ -1,7 +1,5 @@
 #include "Graph.hpp"
 #include "topological_sort_kahn.hpp"
-#include <string.h>
-#include <iostream>
 
 int main(int, char *argv[])
 {
