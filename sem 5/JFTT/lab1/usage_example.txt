@@ -1,7 +1,15 @@
-ba ./cases/test1.txt
-baba ./cases/test1.txt
-aba ./cases/test1.txt
-ab ./cases/test2.txt
-xx ./cases/test2.txt
-abc ./cases/test3.txt
-abcdefghijk ./cases/test3.txt
+./bin/FA ba ./cases/test1.txt
+./bin/FA baba ./cases/test1.txt
+./bin/FA aba ./cases/test1.txt
+./bin/FA ab ./cases/test2.txt
+./bin/FA xx ./cases/test2.txt
+./bin/FA abc ./cases/test3.txt
+./bin/FA abcdefghijk ./cases/test3.txt
+
+./bin/KMP ba ./cases/test1.txt
+./bin/KMP baba ./cases/test1.txt
+./bin/KMP aba ./cases/test1.txt
+./bin/KMP ab ./cases/test2.txt
+./bin/KMP xx ./cases/test2.txt
+./bin/KMP abc ./cases/test3.txt
+./bin/KMP abcdefghijk ./cases/test3.txt
