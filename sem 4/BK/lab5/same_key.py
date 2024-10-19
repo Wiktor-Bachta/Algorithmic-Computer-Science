@@ -24,8 +24,8 @@ def main():
     M2 = list("other stuff")
     M3 = list("third text")
 
-    K1 = [randint(0, 256) for _ in range(40)]
-    K2 = [randint(0, 256) for _ in range(40)]
+    K1 = [randint(0, 255) for _ in range(40)]
+    K2 = [randint(0, 255) for _ in range(40)]
 
     C1 = RC4(K1, M1)
     C2 = RC4(K1, M2)

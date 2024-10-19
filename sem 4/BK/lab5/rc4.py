@@ -35,13 +35,29 @@ def RC4(K: list[int], M: list[int]) -> list[int]:
 
 
 def main():
-    M = [ord(i) for i in list("siemanko")]
-    K = [randint(0, 256) for _ in range(40)]  # K też jest z bajtów
-    enc = RC4(K, M)
-    dec = RC4(K, enc)
-    print("".join([chr(i) for i in M]))
-    print("".join([chr(i) for i in enc]))
-    print("".join([chr(i) for i in dec]))
+    detected = 0
+    for i in range(1000):
+        M = [ord(i) for i in list("sibqo")]
+        M2 = [ord(i) for i in list("aanl7")]
+        K = [randint(0, 255) for _ in range(32)]  # K też jest z bajtów
+        K2 = K.copy()
+        K2[15] += 1
+        enc = RC4(K, M)
+        dec = RC4(K, enc)
+        enc2 = RC4(K2, M2)
+        
+        #print("".join([chr(i) for i in M]))
+        xored = [enc[i] ^ enc2[i] for i in range(min(len(enc), len(enc2)))]
+        same = True
+        for i in xored:
+            if i > 127:
+                same = False
+        if not same:
+            detected += 1
+        
+    print(detected/1000)
+
+    #print("".join([chr(i) for i in dec]))
 
 
 if __name__ == "__main__":
