@@ -18,7 +18,7 @@ int main(int, char *argv[])
     for (int i = 0; i < components_num; i++)
     {
         std::cout << "Rozmiar komponentu " << i + 1 << ": " << connected_components[i].size() << "\n";
-        if (g.get_vertex_num() <= 200)
+        if (g.vertex_num <= 200)
         {
             for (const auto &vertex : connected_components[i])
             {

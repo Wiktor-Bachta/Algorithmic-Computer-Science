@@ -1,26 +1,25 @@
 #include "bipartite_dfs.hpp"
 
-bool is_bapartite(Graph g, bool print_flag)
+bool is_bapartite(Graph &graph, bool print_flag)
 {
-    int vertex_num = g.get_vertex_num();
-    std::vector<std::vector<int>> edges = g.get_edges_when_loaded();
-    std::vector<bool> visited = std::vector<bool>(vertex_num, false);
-    std::vector<bool> colored = std::vector<bool>(vertex_num, false);
+    std::vector<std::vector<int>> adjacency_list_undirected = graph.adjacency_list;
+    std::vector<bool> visited = std::vector<bool>(graph.vertex_num, false);
+    std::vector<bool> colored = std::vector<bool>(graph.vertex_num, false);
     std::stack<int> stack;
     stack.push(0);
     int current_vertex;
-    int num_unvisited = vertex_num;
+    int num_unvisited = graph.vertex_num;
 
     // just treat graph as not directed anyway
-    if (g.is_directed())
+    if (graph.is_directed)
     {
-        for (int vertex = 0; vertex < vertex_num; vertex++)
+        for (int vertex = 0; vertex < graph.vertex_num; vertex++)
         {
-            for (const auto &neighbour : edges[vertex])
+            for (const auto &successor : graph.adjacency_list[vertex])
             {
-                if (std::find(edges[neighbour].begin(), edges[neighbour].end(), vertex) == edges[neighbour].end())
+                if (std::find(graph.adjacency_list[successor].begin(), graph.adjacency_list[successor].end(), vertex) == graph.adjacency_list[successor].end())
                 {
-                    edges[neighbour].push_back(vertex);
+                    adjacency_list_undirected[successor].push_back(vertex);
                 }
             }
         }
@@ -38,18 +37,17 @@ bool is_bapartite(Graph g, bool print_flag)
 
         if (!visited[current_vertex])
         {
-            num_unvisited--;
             visited[current_vertex] = true;
-            for (const auto &neighbour : edges[current_vertex])
+            num_unvisited--;
+            for (const auto &successor : adjacency_list_undirected[current_vertex])
             {
-                if (!visited[neighbour])
+                if (!visited[successor])
                 {
-                    colored[neighbour] = !colored[current_vertex];
-                    stack.push(neighbour);
+                    colored[successor] = !colored[current_vertex];
+                    stack.push(successor);
                 }
-                else if (colored[neighbour] == colored[current_vertex])
+                else if (colored[successor] == colored[current_vertex])
                 {
-                    //std::cout << current_vertex + 1 << " " << neighbour + 1 << "\n";
                     return false;
                 }
             }
@@ -59,7 +57,7 @@ bool is_bapartite(Graph g, bool print_flag)
     if (print_flag)
     {
         std::cout << "Wierzchołki niebieskie:\n";
-        for (int vertex = 0; vertex < vertex_num; vertex++)
+        for (int vertex = 0; vertex < graph.vertex_num; vertex++)
         {
             if (colored[vertex])
             {
@@ -67,7 +65,7 @@ bool is_bapartite(Graph g, bool print_flag)
             }
         }
         std::cout << "Wierzchołki czerwone:\n";
-        for (int vertex = 0; vertex < vertex_num; vertex++)
+        for (int vertex = 0; vertex < graph.vertex_num; vertex++)
         {
             if (!colored[vertex])
             {

@@ -11,7 +11,7 @@ int main(int, char *argv[])
     Graph g = Graph(filename);
 
     bool print_flag = false;
-    if (g.get_vertex_num() <= 200)
+    if (g.vertex_num <= 200)
     {
         print_flag = true;
     }

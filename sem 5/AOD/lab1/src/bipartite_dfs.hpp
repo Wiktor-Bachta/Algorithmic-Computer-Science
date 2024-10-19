@@ -5,7 +5,7 @@
 #include <iostream>
 #include <stack>
 
-bool is_bapartite(Graph g, bool print_flag);
+bool is_bapartite(Graph &graph, bool print_flag);
 
 int get_first_unvisited_vertex(std::vector<bool> &visited);
 

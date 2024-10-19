@@ -6,8 +6,8 @@
 #include <fstream>
 #include <utility>
 
-void dfs(Graph g, bool print_flag, bool save_tree_flag);
+void dfs(Graph &graph, bool print_flag, bool save_tree_flag);
 
-void bfs(Graph g, bool print_flag, bool save_tree_flag);
+void bfs(Graph &graph, bool print_flag, bool save_tree_flag);
 
 #endif

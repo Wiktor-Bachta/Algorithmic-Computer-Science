@@ -1,50 +1,40 @@
 #include "topological_sort_kahn.hpp"
 
-bool is_acyclic(Graph g, bool print_flag)
+bool is_acyclic(Graph &graph, bool print_flag)
 {
-    int vertex_num = g.get_vertex_num();
-
     std::vector<int> sorted_verticies = std::vector<int>();
-    std::stack<int> vertices_no_incoming_edges = std::stack<int>();
+    std::stack<int> vertices_without_incoming_edges = std::stack<int>();
+    std::vector<int> incoming_edge_count = std::vector<int>(graph.vertex_num, 0);
     int current_vertex;
 
-    std::vector<int> incoming_edge_count = std::vector<int>(vertex_num, 0);
-    std::vector<std::vector<int>> vertecies_to = g.get_edges_when_loaded();
-
-    for (int vertex = 0; vertex < vertex_num; vertex++)
+    for (int vertex = 0; vertex < graph.vertex_num; vertex++)
     {
-        for (const auto &vertex_to : vertecies_to[vertex])
+        for (const auto &successor : graph.adjacency_list[vertex])
         {
-            //std::cout << vertex << " " << vertex_to << "\n";
-            incoming_edge_count[vertex_to]++;
+            incoming_edge_count[successor]++;
         }
     }
 
-    for (int vertex = 0; vertex < vertex_num; vertex++)
+    for (int vertex = 0; vertex < graph.vertex_num; vertex++)
     {
-        //std::cout << vertex << " ma wchodzących " << incoming_edge_count[vertex] << "\n";
         if (incoming_edge_count[vertex] == 0)
         {
-            vertices_no_incoming_edges.push(vertex);
+            vertices_without_incoming_edges.push(vertex);
         }
     }
 
-    while (!vertices_no_incoming_edges.empty())
+    while (!vertices_without_incoming_edges.empty())
     {
-        current_vertex = vertices_no_incoming_edges.top();
-        vertices_no_incoming_edges.pop();
-        //std::cout << current_vertex + 1 << "\n";
+        current_vertex = vertices_without_incoming_edges.top();
+        vertices_without_incoming_edges.pop();
         sorted_verticies.push_back(current_vertex);
 
-        std::vector<int> neighbours = vertecies_to[current_vertex];
-        vertecies_to[current_vertex].clear();
-        for (const auto &neighbour : neighbours)
+        for (const auto &successor : graph.adjacency_list[current_vertex])
         {
-            //std::cout << current_vertex << " " <<  neighbour << "\n";
-            incoming_edge_count[neighbour]--;
-            if (incoming_edge_count[neighbour] == 0)
+            incoming_edge_count[successor]--;
+            if (incoming_edge_count[successor] == 0)
             {
-                vertices_no_incoming_edges.push(neighbour);
+                vertices_without_incoming_edges.push(successor);
             }
         }
     }
@@ -64,7 +54,6 @@ bool is_acyclic(Graph g, bool print_flag)
 
     return true;
 }
-
 
 bool graph_has_edges(std::vector<int> &incoming_edge_count)
 {

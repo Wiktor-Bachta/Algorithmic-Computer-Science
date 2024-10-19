@@ -4,6 +4,8 @@
 ./bin/connected_components_demonstration /home/wiktor/Desktop/AOD/lab1/aod_testy1/3/g3-1.txt
 ./bin/bipartite_demonstration /home/wiktor/Desktop/AOD/lab1/aod_testy1/4/d4a-1.txt
 
+
+zwiększenie stacku do zad 3:
 ulimit -s unlimited
 ulimit -s 8192
 

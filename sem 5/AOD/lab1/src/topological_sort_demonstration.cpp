@@ -10,20 +10,17 @@ int main(int, char *argv[])
 
     Graph g = Graph(filename);
 
-
-    if (!g.is_directed())
+    if (!g.is_directed)
     {
         std::cout << "Graf nie jest skierowany\n";
         return 1;
     }
 
     bool print_flag = false;
-    if (g.get_vertex_num() <= 200)
+    if (g.vertex_num <= 200)
     {
         print_flag = true;
     }
-
-    //std::cout << "wywołanko\n";
 
     bool acyclic = is_acyclic(g, print_flag);
 

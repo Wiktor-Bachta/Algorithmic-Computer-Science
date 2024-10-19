@@ -3,17 +3,16 @@
 #include <stack>
 #include <queue>
 
-void dfs(Graph g, bool print_flag, bool save_tree_flag)
+void dfs(Graph &graph, bool print_flag, bool save_tree_flag)
 {
     if (save_tree_flag)
     {
         std::ofstream out_file("/home/wiktor/Desktop/AOD/lab1/tree.txt");
-        out_file << g.get_vertex_num() << "\n";
+        out_file << graph.vertex_num << "\n";
         out_file.close();
     }
 
-    std::vector<std::vector<int>> edges = g.get_edges_when_loaded();
-    std::vector<bool> visited = std::vector<bool>(g.get_vertex_num(), false);
+    std::vector<bool> visited = std::vector<bool>(graph.vertex_num, false);
     std::stack<std::pair<int, int>> stack;
     stack.push(std::make_pair(0, 0));
     int parent, current_vertex;
@@ -40,28 +39,27 @@ void dfs(Graph g, bool print_flag, bool save_tree_flag)
             }
 
             visited[current_vertex] = true;
-            for (const auto &neighbour : edges[current_vertex])
+            for (const auto &successor : graph.adjacency_list[current_vertex])
             {
-                if (!visited[neighbour])
+                if (!visited[successor])
                 {
-                    stack.push(std::make_pair(current_vertex, neighbour));
+                    stack.push(std::make_pair(current_vertex, successor));
                 }
             }
         }
     }
 }
 
-void bfs(Graph g, bool print_flag, bool save_tree_flag)
+void bfs(Graph &graph, bool print_flag, bool save_tree_flag)
 {
     if (save_tree_flag)
     {
         std::ofstream out_file("/home/wiktor/Desktop/AOD/lab1/tree.txt");
-        out_file << g.get_vertex_num() << "\n";
+        out_file << graph.vertex_num << "\n";
         out_file.close();
     }
 
-    std::vector<std::vector<int>> edges = g.get_edges_when_loaded();
-    std::vector<bool> visited = std::vector<bool>(g.get_vertex_num(), false);
+    std::vector<bool> visited = std::vector<bool>(graph.vertex_num, false);
     std::queue<std::pair<int, int>> queue;
     queue.push(std::make_pair(0, 0));
     visited[0] = true;
@@ -86,12 +84,12 @@ void bfs(Graph g, bool print_flag, bool save_tree_flag)
             std::cout << current_vertex + 1 << "\n";
         }
 
-        for (const auto &neighbour : edges[current_vertex])
+        for (const auto &successor : graph.adjacency_list[current_vertex])
         {
-            if (!visited[neighbour])
+            if (!visited[successor])
             {
-                visited[neighbour] = true;
-                queue.push(std::make_pair(current_vertex, neighbour));
+                visited[successor] = true;
+                queue.push(std::make_pair(current_vertex, successor));
             }
         }
     }
