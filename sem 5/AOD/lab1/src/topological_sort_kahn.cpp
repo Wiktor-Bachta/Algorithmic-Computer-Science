@@ -48,7 +48,7 @@ bool is_acyclic(Graph &graph, bool print_flag)
     {
         for (const auto vertex : sorted_verticies)
         {
-            std::cout << vertex + 1 << "\n";
+            std::cout << vertex + 1 << "-> ";
         }
     }
 

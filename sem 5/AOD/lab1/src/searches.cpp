@@ -33,7 +33,7 @@ void dfs(Graph &graph, bool print_flag, bool save_tree_flag)
 
             if (print_flag)
             {
-                std::cout << current_vertex + 1 << "\n";
+                std::cout << current_vertex + 1 << "-> ";
             }
 
             visited[current_vertex] = true;
@@ -79,7 +79,7 @@ void bfs(Graph &graph, bool print_flag, bool save_tree_flag)
 
         if (print_flag)
         {
-            std::cout << current_vertex + 1 << "\n";
+            std::cout << current_vertex + 1 << "-> ";
         }
 
         for (const auto &successor : graph.adjacency_list[current_vertex])

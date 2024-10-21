@@ -20,8 +20,9 @@ int main(int, char *argv[])
         {
             for (const auto &vertex : connected_components[i])
             {
-                std::cout << vertex + 1 << "\n";
+                std::cout << vertex + 1 << ", ";
             }
+            std::cout << "\n";
         }
     }
 

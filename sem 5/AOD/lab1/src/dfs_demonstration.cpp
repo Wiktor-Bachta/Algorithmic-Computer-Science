@@ -2,10 +2,10 @@
 #include "searches.hpp"
 #include <string.h>
 
-int main(int, char* argv[]) {
+int main(int argc, char* argv[]) {
 
     bool print_tree_flag = false;
-    if (strcmp(argv[2], "-p") == 0) {
+    if (argc > 2 && strcmp(argv[2], "-p") == 0) {
         print_tree_flag = true;
     }
 

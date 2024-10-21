@@ -61,17 +61,18 @@ bool is_bapartite(Graph &graph, bool print_flag)
         {
             if (colored[vertex])
             {
-                std::cout << vertex + 1 << "\n";
+                std::cout << vertex + 1 << ", ";
             }
         }
-        std::cout << "Wierzchołki czerwone:\n";
+        std::cout << "\nWierzchołki czerwone:\n";
         for (int vertex = 0; vertex < graph.vertex_num; vertex++)
         {
             if (!colored[vertex])
             {
-                std::cout << vertex + 1 << "\n";
+                std::cout << vertex + 1 << ", ";
             }
         }
+        std::cout << "\n";
     }
 
     return true;
