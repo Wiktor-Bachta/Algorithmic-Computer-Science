@@ -1,0 +1,504 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\title{Obliczenia Naukowe - sprawozdanie nr 1}
+\author{Wiktor Bachta}
+\date{Październik 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Zadanie 1}
+
+\subsection{Opis}
+
+Wyznaczanie iteracyjne liczb \textit{macheps, eta, max}
+dla różnych typów arytmetyki zmiennoprzecinkowej.
+
+\subsection{Rozwiązanie}
+
+Liczby \textit{eta} oraz \textit{macheps} wyznaczam przez iteracyjne dzielenie
+przez 2.
+Liczbę \textit{max} wyznaczam przez mnożenie przez 2, a następnie powrót
+funkcją \textit{prevfloat}
+
+\subsection{Wynik}
+
+\begin{center}
+    \begin{tabular}{|c | c | c| c |}
+        \hline
+        typ     & \textit{macheps}      & \textit{eps(typ)}     & wartość z
+        float.h
+        \\
+        \hline
+        Float16 & 0.000977              & 0.000977              & -
+        \\
+        \hline
+        Float32 & 1.1920929e-7          & 1.1920929e-7          & 1.192093e-07
+        \\
+        \hline
+        Float64 & 2.220446049250313e-16 & 2.220446049250313e-16 &
+        2.220446e-16
+        \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \begin{tabular}{|c | c | c|}
+        \hline
+        typ     & \textit{eta} & \textit{nextfloat(typ(0))} \\
+        \hline
+        Float16 & 6.0e-8       & 6.0e-8                     \\
+        \hline
+        Float32 & 1.0e-45      & 1.0e-45                    \\
+        \hline
+        Float64 & 5.0e-324     & 5.0e-324                   \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \begin{tabular}{|c | c | c| c |}
+        \hline
+        typ     & \textit{max}           & \textit{floatmax(typ)} & wartość z
+        float.h
+        \\
+        \hline
+        Float16 & 6.55e4                 & 6.55e4                 & -
+        \\
+        \hline
+        Float32 & 3.4028235e38           & 3.4028235e38           &
+        3.402823e+38
+        \\
+        \hline
+        Float64 & 1.7976931348623157e308 & 1.7976931348623157e308 &
+        1.797693e+308
+        \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \begin{tabular}{|c | c | c|}
+        \hline
+        typ     & \textit{floatmin(typ)}  & \textit{$Min_{nor}$}
+        \\
+        \hline
+        Float32 & 1.1754944e-38           & 1.1754944e-38
+        \\
+        \hline
+        Float64 & 2.2250738585072014e-308 & 2.2250738585072014e-308
+        \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Wnioski}
+
+\begin{itemize}
+    \item Iteracyjne obliczenia dają prawidłowe wartości dla \textit{macheps,
+              eta, max}
+    \item Jaki związek ma liczba \textit{macheps} z precyzją arytmetyki?
+          $\textit{macheps} = 2 \epsilon$ - maksymalna odległość od
+          reprezentowalnej
+          liczby jest w środku dwóch kolejnych liczb
+    \item Jaki związek ma liczba eta z liczbą $MIN_{sub}$?
+          Są tożsame - najmniejsza liczba zdenormalizowana.
+    \item Co zwracają funkcje $floatmin(Float32)$ i $floatmin(Float64)$ i jaki
+          jest związek zwracanych wartości z liczbą $MIN_{nor}$?
+          Są tożsame - najmniejsza liczba znormalizowana.
+\end{itemize}
+
+\section{Zadanie 2}
+
+\subsection{Opis}
+
+Wyznaczenie epsilonu maszynowego \textit{macheps} na podstawie wzoru
+\[ macheps = 3*(4/3 - 1) - 1 \]
+
+\subsection{Wynik}
+
+\begin{center}
+    \begin{tabular}{|c | c | c|}
+        \hline
+        Typ     & \textit{macheps}      & \textit{macheps} wg wzoru Kahana \\
+        \hline
+        Float16 & 0.000977              & -0.000977                        \\
+        \hline
+        Float32 & 1.1920929e-7          & 1.1920929e-7                     \\
+        \hline
+        Float64 & 2.220446049250313e-16 & -2.220446049250313e-16           \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Wnioski}
+
+Wzór Kahana może być wykorzystany do obliczenia \textit{macheps}, przy
+zastosowaniu wartości bezwzględnej.
+Różnice znaków wynikają z miejsca "ucięcia" liczby 4/3 w odpowiedniej
+reprezentacji.
+Dla Float16 oraz Float64 jest ona zaokrąglana w dół (...01), natomiast dla
+Float32 w górę (...11)
+
+\section{Zadanie 3}
+
+\subsection{Opis}
+
+Sprawdzenie rozmieszczenia liczb typu Float64 w przedziale $[1, 2]$.
+Każda liczba $x$ w tym przedziale może być przedstawiona jako $x + \delta k$,
+gdzie
+$ k = 1, 2,...,2^{52} - 1$ i $\delta = 2^{-52}$
+Podobne rozważania dla przedziałów $[1/2, 1]$ oraz $[2, 4]$
+
+\subsection{Rozwiązanie}
+
+Przenalalizuję reprezentację bitową liczb w przedziale, z najmniejszym możliwym
+krokiem
+$\delta = nextfloat(x)$
+
+\subsection{Wynik}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c | c|}
+        \hline
+        liczba           & \textit{bitstring} (liczba)                   \\
+        \hline
+        1.0              &
+        0001111111111000000000000000000000000000000000000000000000000000 \\
+        \hline
+        1.0 + $\delta$   &
+        0011111111110000000000000000000000000000000000000000000000000001 \\
+        \hline
+        1.0 + 2 $\delta$ &
+        0011111111110000000000000000000000000000000000000000000000000010 \\
+        \hline
+        1.0 + 3 $\delta$ &
+        0011111111110000000000000000000000000000000000000000000000000011 \\
+        \hline
+        1.0 + 4 $\delta$ &
+        0011111111110000000000000000000000000000000000000000000000000100 \\
+        \hline
+    \end{tabular}
+    \caption{$\delta = 2^{-52}$}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c | c|}
+        \hline
+        liczba           & \textit{bitstring} (liczba)                   \\
+        \hline
+        0.5              &
+        0011111111100000000000000000000000000000000000000000000000000000 \\
+        \hline
+        0.5 + $\delta$   &
+        0011111111100000000000000000000000000000000000000000000000000001 \\
+        \hline
+        0.5 + 2 $\delta$ &
+        0011111111100000000000000000000000000000000000000000000000000010 \\
+        \hline
+        0.5 + 3 $\delta$ &
+        0011111111100000000000000000000000000000000000000000000000000011 \\
+        \hline
+        0.5 + 4 $\delta$ &
+        0011111111100000000000000000000000000000000000000000000000000100 \\
+        \hline
+    \end{tabular}
+    \caption{$\delta = 2^{-53}$}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c | c|}
+        \hline
+        liczba           & \textit{bitstring} (liczba)                   \\
+        \hline
+        2.0              &
+        0100000000000000000000000000000000000000000000000000000000000000 \\
+        \hline
+        2.0 + $\delta$   &
+        0100000000000000000000000000000000000000000000000000000000000001 \\
+        \hline
+        2.0 + 2 $\delta$ &
+        0100000000000000000000000000000000000000000000000000000000000010 \\
+        \hline
+        2.0 + 3 $\delta$ &
+        0100000000000000000000000000000000000000000000000000000000000011 \\
+        \hline
+        2.0 + 4 $\delta$ &
+        0100000000000000000000000000000000000000000000000000000000000100 \\
+        \hline
+    \end{tabular}
+    \caption{$\delta = 2^{-51}$}
+\end{table}
+
+\subsection{Wnioski}
+
+Ze względu na to, że dane przedziały są w postaci $[2^{t}, 2^{t + 1}]$ cecha
+dla każdej liczby z przedziału
+będzie taka sama. Czyli liczba jest tożsama z mantysą, którą możemy ułożyć na
+$2^{52}$ sposobów.
+Najmniejszy krok jest wtedy równy $2^{-(52 + t)}$ i liczby są ułożnone w
+przedziale jednostajnie.
+
+\section{Zadanie 4}
+
+\subsection{Opis}
+
+Znaleźć najmniejszą liczbę w arytmetyce Float64 $ 1 < x < 2$, dla której
+$x(1/x) \neq 1$
+
+\subsection{Rozwiązanie}
+
+Iteracyjne przechodzenie po liczbach za pomocą \textit{nextfloat} do
+odnalezienia liczby o zukanej własności
+
+\subsection{Wynik}
+
+Znaleziona liczba: 1.000000057228997
+
+$x(1/x) = 0.9999999999999999$
+
+\subsection{Wnioski}
+
+Liczba $1/x$ nie ma dokładnej reprezentacji
+w arytmetyce Float, więc ulega zaokrągleniu do najbliższej możliwej liczby, co
+powoduje błąd. Nwet najprostrze dzielenie i monożenie wprowadza potencjalne
+błędy
+
+\section{Zadanie 5}
+
+\subsection{Opis}
+
+Obliczanie iloczynu skalarnego dwóch wektorów za pomocą czterech metod
+
+\[ x = [2.718281828, -3.141592654, 1.414213562, 0.5772156649, 0.3010299957] \]
+\[ y = [1486.2497, 878366.9879, -22.37492, 4773714.647, 0.000185049] \]
+
+\begin{itemize}
+    \item Obliczanie i sumowanie iloczynów po kolei
+    \item Obliczanie i sumowanie iloczynów w odwrotnej kolejności
+    \item Od największego do najmniejszego (dodaj dodatnie liczby w porządku od
+          największego
+          do najmniejszego, dodaj ujemne liczby w porządku od najmniejszego do
+          największego,
+          a następnie daj do siebie obliczone sumy częściowe)
+    \item od najmniejszego do największego
+\end{itemize}
+
+\subsection{Wynik}
+
+\begin{center}
+    \begin{tabular}{|c | c | c | c | c |}
+        \hline
+        Typ     & metoda 1               & metoda 2                & metoda 3 &
+        metoda 4
+        \\
+        \hline
+        Float32 & -0.4999443             & -0.4543457              & -0.5     &
+        -0.5
+        \\
+        \hline
+        Float64 & 1.0251881368296672e-10 & -1.5643308870494366e-10 & 0.0      &
+        0.0
+        \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Wnioski}
+
+Rzeczywista wartość iloczynu wynosi $-1.00657107000000 10^{-11}$
+Obie arytmetyki dały wyniki dalekie rzeczywitej wartości dla każdej z metod.
+Wszystkie błędy względne przekraczają tutaj $100\%$.
+Oznacza to, że nawet w podstawowych operacjach (dodawanie, mnożenie) kolejność
+wykonywanych działań ma znaczący wpływ na otrzymywane rezultaty.
+
+\section{Zadanie 6}
+
+\subsection{Opis}
+
+Obliczenie i porówananie wartości dwóch funkcji, które są sobie równe, ale
+wykorzystują inne wzory
+
+\[ f(x) = \sqrt{x^2 + 1} - 1 \]
+\[ g(x) = x^2 / {(\sqrt{x^2 + 1} + 1)} \]
+
+dla kolejnych argumentów $x = 8^{-1}, 8^{-2},...$
+
+\subsection{Wynik}
+
+\begin{center}
+    \begin{tabular}{|c | c | c | c |}
+        \hline
+        $x$        & $f(x)$                 & $g(x)$                 & $x^2 /
+            2$
+        \\
+        \hline
+        $8^{-1}$   & 0.0077822185373186414  & 0.0077822185373187065  &
+        0.0078125
+        \\
+        \hline
+        $8^{-2}$   & 0.00012206286282867573 & 0.00012206286282875901 &
+        0.0001220703125
+        \\
+        \hline
+        $8^{-3}$   & 1.9073468138230965e-6  & 1.907346813826566e-6   &
+        1.9073486328125e-6
+        \\
+        \hline
+        $8^{-4}$   & 2.9802321943606103e-8  & 2.9802321943606116e-8  &
+        2.9802322387695312e-8
+        \\
+        \hline
+        $8^{-5}$   & 4.656612873077393e-10  & 4.6566128719931904e-10 &
+        4.656612873077393e-10
+        \\
+        \hline
+        $8^{-6}$   & 7.275957614183426e-12  & 7.275957614156956e-12  &
+        7.275957614183426e-12
+        \\
+        \hline
+        $8^{-7}$   & 1.1368683772161603e-13 & 1.1368683772160957e-13 &
+        1.1368683772161603e-13
+        \\
+        \hline
+        $8^{-8}$   & 1.7763568394002505e-15 & 1.7763568394002489e-15 &
+        1.7763568394002505e-15
+        \\
+        \hline
+        $8^{-9}$   & 0.0                    & 2.7755575615628914e-17 &
+        2.7755575615628914e-17
+        \\
+        \hline
+        $8^{-10}$  & 0.0                    & 4.336808689942018e-19  &
+        4.336808689942018e-19
+        \\
+        \hline
+        \dots      & \dots                  & \dots                  & \dots
+        \\
+        \hline
+        $8^{-177}$ & 0.0                    & 1.012e-320             &
+        1.012e-320
+        \\
+        \hline
+        $8^{-178}$ & 0.0                    & 1.6e-322               & 1.6e-322
+        \\
+        \hline
+        $8^{-179}$ & 0.0                    & 0.0                    & 0.0
+        \\
+        \hline
+
+    \end{tabular}
+\end{center}
+
+\subsection{Wnioski}
+
+Analiza liczby $\sqrt{x^2 + 1}$ pozwala na dokładniejsze zrozumienie obliczeń.
+Jako, że $x$ jest bliski zeru, $x^2$ szybko zamienia się w zero, więc całe
+wyrażenie daje po prostu wartość 1.
+Dlatego funkcja $f$ daje wartości równe 0, a $g$ w rzeczywistości zwraca $x^2 /
+    2$
+Wiarygodniejsza jest funkcja $g$, chociaż jej wartości są większe od
+rzeczywistych. Potęgowanie liczb blikich zeru szybko może dać wynik równy zeru
+
+\section{Zadanie 7}
+
+\subsection{Opis}
+
+Przybliżanie pochodnej w punkcie za pomocą dedfinicji, dla coraz mniejszych $h$
+i porównanie z wartością rzeczywistą w punkcie $x = 1$.
+
+\[ f(x) = sin(x) + cos(3 x) \]
+\[ f'(x) = cos(x) - 3 sin(3 x) \]
+\[ \widetilde{f} (x) = \frac{f(x + h) - f(x)}{h} \]
+\[ h = 2^{-n}, n = 0, 1, 2,...,54 \]
+
+\subsection{Wynik}
+
+\begin{center}
+    \begin{tabular}{|c | c | c | c |}
+        \hline
+        $h$                 & $h + 1$             &
+        $\widetilde{f} (x)$ &
+        $|f'(x) -
+            \widetilde{f} (x)|$
+        \\
+        \hline
+        $2^{0}$             & 2.0                 &
+        2.0179892252685967  &
+        1.9010469435800585
+        \\
+        \hline
+        $2^{-1}$            & 1.5                 &
+        1.8704413979316472  &
+        1.753499116243109
+        \\
+        \hline
+        $2^{-2}$            & 1.25                &
+        1.1077870952342974  &
+        0.9908448135457593
+        \\
+        \hline
+        \dots               & \dots               & \dots
+                            &
+        \dots
+        \\
+        \hline
+        $2^{-26}$           & 1.0000000149011612
+                            & 0.11694233864545822 &
+        5.6956920069239914e-8
+        \\
+        \hline
+        $2^{-27}$           & 1.0000000074505806
+                            & 0.11694231629371643 &
+        3.460517827846843e-8
+        \\
+        \hline
+        $2^{-28}$           & 1.0000000037252903
+                            & 0.11694228649139404 &
+        4.802855890773117e-9
+        \\
+        \hline
+        \dots               & \dots               & \dots
+                            &
+        \dots
+        \\
+        \hline
+        $2^{-52}$           & 1.0000000000000002
+                            & -0.5                &
+        0.6169422816885382
+        \\
+        \hline
+        $2^{-53}$           & 1.0                 & 0.0
+                            &
+        0.11694228168853815
+        \\
+        \hline
+        $2^{-54}$           & 1.0                 & 0.0
+                            &
+        0.11694228168853815
+        \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Wnioski}
+
+Najlepsze przybliżenie otrzymujemy dla $n=28$, potem wartość błędu rośnie.
+Jak wytłumaczyć, że od pewnego momentu zmniejszanie wartości h nie poprawia
+przybliżenia wartości pochodnej?
+Błędy zaokrągleń: Gdy
+h jest zbyt małe, wyrażenie $f(x + h) - f(x)$ staje się podatne na błędy
+zaokrągleń. Różnica
+jest liczona na liczbach o małej różnicy wartości, co prowadzi do coraz
+większego wpływu błędów numerycznych.
+Podsumowując, dla bardzo małych wartości
+h, zmniejszanie
+h nie poprawia przybliżenia pochodnej z powodu błędów numerycznych wynikających
+z ograniczeń precyzji komputerowej.
+\end{document}
