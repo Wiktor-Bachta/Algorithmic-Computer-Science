@@ -9,25 +9,25 @@ function solve(machine_time_matrix::Matrix, availibility::Vector, machine_costs:
 	set_silent(model)
 
 	# Ile kg produkuje każda maszyna
-	@variable(model, kg_procduced_matrix[1:m, 1:n] >= 0, Int)
+	@variable(model, kg_produced_matrix[1:m, 1:n] >= 0, Int)
 
 	# Maszyny nie przekraczają dostępności
-	@constraint(model, vec(sum(kg_procduced_matrix .* machine_time_matrix, dims = 1)) .<= availibility)
+	@constraint(model, vec(sum(kg_produced_matrix .* machine_time_matrix, dims = 1)) .<= availibility)
 
 	# Nie produkujemy więcej produktu niż można sprzedać
-	@constraint(model, vec(sum(kg_procduced_matrix, dims = 2)) .<= max_demand)
+	@constraint(model, vec(sum(kg_produced_matrix, dims = 2)) .<= max_demand)
 
 	# Maks profit = zysk - materiały - maszyny
-	@objective(model, Max, sum((sell_prices .- material_costs) .* vec(sum(kg_procduced_matrix, dims = 2))) - sum(machine_costs .* vec(sum(kg_procduced_matrix .* machine_time_matrix, dims = 1))))
+	@objective(model, Max, sum((sell_prices .- material_costs) .* vec(sum(kg_produced_matrix, dims = 2))) - sum(machine_costs .* vec(sum(kg_produced_matrix .* machine_time_matrix, dims = 1))))
 
 	optimize!(model)
 
 	if termination_status(model) == MOI.OPTIMAL
-		println("Kg na produkt na maszynę")
-		display(value.(kg_procduced_matrix))
-		println("Minuty na produkt na maszynę")
-		display(value.(kg_procduced_matrix) .* machine_time_matrix)
-		println("Profit")
+        println("Kg na produkt na maszynę")
+		display(value.(kg_produced_matrix))
+        println("Minuty na produkt na maszynę")
+        display(value.(kg_produced_matrix) .* machine_time_matrix)
+        println("Profit")
 		println(objective_value(model))
 	elseif termination_status(model) == MOI.INFEASIBLE
 		println("The model is infeasible. Check the constraints or data for inconsistencies.")
