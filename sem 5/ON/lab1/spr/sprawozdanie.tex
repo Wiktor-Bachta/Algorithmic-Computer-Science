@@ -111,6 +111,8 @@ funkcją \textit{prevfloat}
           Są tożsame - najmniejsza liczba znormalizowana.
 \end{itemize}
 
+\clearpage
+
 \section{Zadanie 2}
 
 \subsection{Opis}
@@ -141,7 +143,7 @@ zastosowaniu wartości bezwzględnej.
 Różnice znaków wynikają z miejsca "ucięcia" liczby 4/3 w odpowiedniej
 reprezentacji.
 Dla Float16 oraz Float64 jest ona zaokrąglana w dół (...01), natomiast dla
-Float32 w górę (...11)
+Float32 w górę (...11).
 
 \section{Zadanie 3}
 
@@ -168,7 +170,7 @@ $\delta = nextfloat(x)$
         liczba           & \textit{bitstring} (liczba)                   \\
         \hline
         1.0              &
-        0001111111111000000000000000000000000000000000000000000000000000 \\
+        0011111111110000000000000000000000000000000000000000000000000000 \\
         \hline
         1.0 + $\delta$   &
         0011111111110000000000000000000000000000000000000000000000000001 \\
@@ -236,14 +238,17 @@ $\delta = nextfloat(x)$
     \caption{$\delta = 2^{-51}$}
 \end{table}
 
+\clearpage
+
 \subsection{Wnioski}
 
 Ze względu na to, że dane przedziały są w postaci $[2^{t}, 2^{t + 1}]$ cecha
 dla każdej liczby z przedziału
 będzie taka sama. Czyli liczba jest tożsama z mantysą, którą możemy ułożyć na
 $2^{52}$ sposobów.
-Najmniejszy krok jest wtedy równy $2^{-(52 + t)}$ i liczby są ułożnone w
-przedziale jednostajnie.
+Najmniejszy krok jest wtedy równy $2^{-(52 + t)}$ i liczby są ułożone w
+przedziale jednostajnie. Oznacza to, że precyzja reprezentacji jest
+proporcjonalna do odległości liczby od zera - dokładniejsza dla mniejszych liczb.
 
 \section{Zadanie 4}
 
@@ -255,7 +260,7 @@ $x(1/x) \neq 1$
 \subsection{Rozwiązanie}
 
 Iteracyjne przechodzenie po liczbach za pomocą \textit{nextfloat} do
-odnalezienia liczby o zukanej własności
+odnalezienia liczby o szukanej własności
 
 \subsection{Wynik}
 
@@ -267,8 +272,8 @@ $x(1/x) = 0.9999999999999999$
 
 Liczba $1/x$ nie ma dokładnej reprezentacji
 w arytmetyce Float, więc ulega zaokrągleniu do najbliższej możliwej liczby, co
-powoduje błąd. Nwet najprostrze dzielenie i monożenie wprowadza potencjalne
-błędy
+powoduje błąd. Nawet najprostrze dzielenie i monożenie wprowadza potencjalne
+błędy, a komputer nie potrafi "od tak" upraszczać wyrażeń.
 
 \section{Zadanie 5}
 
@@ -316,7 +321,8 @@ Rzeczywista wartość iloczynu wynosi $-1.00657107000000 10^{-11}$
 Obie arytmetyki dały wyniki dalekie rzeczywitej wartości dla każdej z metod.
 Wszystkie błędy względne przekraczają tutaj $100\%$.
 Oznacza to, że nawet w podstawowych operacjach (dodawanie, mnożenie) kolejność
-wykonywanych działań ma znaczący wpływ na otrzymywane rezultaty.
+wykonywanych działań ma znaczący wpływ na otrzymywane rezultaty. Należy stosować
+odpowiednie metody/algorytmy w zależności o wykonywanych obliczeń.
 
 \section{Zadanie 6}
 
@@ -399,12 +405,14 @@ dla kolejnych argumentów $x = 8^{-1}, 8^{-2},...$
 \subsection{Wnioski}
 
 Analiza liczby $\sqrt{x^2 + 1}$ pozwala na dokładniejsze zrozumienie obliczeń.
-Jako, że $x$ jest bliski zeru, $x^2$ szybko zamienia się w zero, więc całe
-wyrażenie daje po prostu wartość 1.
+Jako, że $x$ jest bliski zeru, $x^2$ staje się bardzo mała i dodawanie z jedynką
+daje rezultat równy jeden. Cecha $(8^{-9})^2 = 2^{-54}$ to -54, cecha jedynki to 0,
+czyli ich różnica przekracza długość mantysy.
 Dlatego funkcja $f$ daje wartości równe 0, a $g$ w rzeczywistości zwraca $x^2 /
     2$
-Wiarygodniejsza jest funkcja $g$, chociaż jej wartości są większe od
-rzeczywistych. Potęgowanie liczb blikich zeru szybko może dać wynik równy zeru
+Z tego powodu, wiarygodniejsza jest funkcja $g$. 
+Wnioskiem jest fakt, że dla dużych różnic wielkości liczb $x + y = x$, na co należy uważać przy obliczeniach.
+Drugi wniosek to fakt, że dla pewnych obliczeń można znaleźć alternatywny wzór, który działa z większą dokładnością. 
 
 \section{Zadanie 7}
 
@@ -490,6 +498,7 @@ i porównanie z wartością rzeczywistą w punkcie $x = 1$.
 \subsection{Wnioski}
 
 Najlepsze przybliżenie otrzymujemy dla $n=28$, potem wartość błędu rośnie.
+Dla $h <= 2^{-53}, h + 1 = 1$ co psuje przybliżenie pochodnej, dając wynik 0.
 Jak wytłumaczyć, że od pewnego momentu zmniejszanie wartości h nie poprawia
 przybliżenia wartości pochodnej?
 Błędy zaokrągleń: Gdy
@@ -497,8 +506,8 @@ h jest zbyt małe, wyrażenie $f(x + h) - f(x)$ staje się podatne na błędy
 zaokrągleń. Różnica
 jest liczona na liczbach o małej różnicy wartości, co prowadzi do coraz
 większego wpływu błędów numerycznych.
-Podsumowując, dla bardzo małych wartości
-h, zmniejszanie
-h nie poprawia przybliżenia pochodnej z powodu błędów numerycznych wynikających
-z ograniczeń precyzji komputerowej.
+Wniosek: obliczenia maszynowne rzadko zachowują się intuicyjnie, i dosłowne
+traktowanie matematycznych granic, może dawać gorsze rezultaty dla teoretycznie
+lepszych (dokładniejszych) wartości. Odejmownie liczb barzo bliskich powoduje dużą
+utratę dokładności.
 \end{document}
