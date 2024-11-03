@@ -17,7 +17,17 @@ przedsiębiorstwa lotniczego, które musi dostarczyć określoną ilość paliwa
 lotniska od różnych dostawców. Model oparty jest na programowaniu
 liniowym i wykorzystuje bibliotekę JuMP do optymalizacji.
 
-\subsection*{Zmienne decyzyjne}
+\subsection{Parametry}
+\begin{itemize}
+  \item \( m \): liczba dostawców,
+  \item \( n \): liczba lotnisk,
+  \item \( d_j \): zapotrzebowanie na paliwo na lotnisku \( j \),
+  \item \( p_i \): maksymalna ilość paliwa dostępna od dostawcy \( i \),
+  \item \( c_{ij} \): koszt dostarczenia paliwa od dostawcy \( i \) na lotnisko
+        \( j \).
+\end{itemize}
+
+\subsection{Zmienne decyzyjne}
 Definiujemy zmienne decyzyjne \( x_{ij} \), które reprezentują ilość paliwa
 dostarczanego przez firmę \( i \) na lotnisko \( j \), gdzie:
 \[
@@ -25,7 +35,7 @@ dostarczanego przez firmę \( i \) na lotnisko \( j \), gdzie:
 \]
 oraz \( x_{ij} \) jest liczbą całkowitą.
 
-\subsection*{Funkcja celu}
+\subsection{Funkcja celu}
 Celem jest minimalizacja całkowitego kosztu dostarczenia paliwa. Koszt
 dostarczenia jednego galonu paliwa przez dostawcę \( i \) na lotnisko \( j \)
 jest zapisany w macierzy kosztów \( c_{ij} \). Funkcja celu wyraża się
@@ -33,13 +43,8 @@ następująco:
 \[
   \min \sum_{i=1}^m \sum_{j=1}^n c_{ij} x_{ij}
 \]
-gdzie:
-\begin{itemize}
-  \item $m$: liczba dostawców,
-  \item $n$: liczba lotnisk.
-\end{itemize}
 
-\subsection*{Ograniczenia}
+\subsection{Ograniczenia}
 \begin{enumerate}
   \item \textbf{Ograniczenia zapotrzebowania na paliwo na każdym lotnisku}:
         Każde lotnisko \( j \) wymaga określonej ilości paliwa, oznaczonej jako
@@ -59,6 +64,63 @@ gdzie:
         \]
 \end{enumerate}
 
+\subsection{Egzemplarz}
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+              & Firma 1 & Firma 2 & Firma 3 \\
+    \hline
+    \( p_j \) & 275000  & 550000  & 660000  \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline
+              & Lotnisko 1 & Lotnisko 2 & Lotnisko 3 & Lotnisko 4 \\
+    \hline
+    \( d_i \) & 110000     & 220000     & 330000     & 440000     \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \( c_{ij} \) & Firma 1 & Firma 2 & Firma 3 \\
+    \hline
+    Lotnisko 1   & 10      & 7       & 8       \\
+    Lotnisko 2   & 10      & 11      & 14      \\
+    Lotnisko 3   & 9       & 12      & 4       \\
+    Lotnisko 4   & 11      & 13      & 9       \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Rozwiązanie}
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \( x_{ij} \) & Firma 1 & Firma 2 & Firma 3 \\
+    \hline
+    Lotnisko 1   & 0       & 110000  & 0       \\
+    Lotnisko 2   & 165000  & 55000   & 0       \\
+    Lotnisko 3   & 0       & 0       & 330000  \\
+    Lotnisko 4   & 110000  & 0       & 330000  \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{itemize}
+  \item Jaki jest minimalny łączny koszt dostaw wymaganych ilosci paliwa na
+        wszystkie lotniska? \\ 8525000\$
+  \item Czy wszystkie firmy dostarczają paliwo? \\ Tak, wszystkie 3 firmy
+        dostarczają paliwo.
+  \item Czy możliwości dostaw paliwa przez firmy są wyczerpane? \\ Tak - dla
+        firmy 1 i 3.
+\end{itemize}
+
 \section{Zadanie 2}
 
 Model ten rozwiązuje problem optymalizacji produkcji zakładu, który może
@@ -66,7 +128,20 @@ wytwarzać cztery różne wyroby w ograniczonych ilościach, uwzględniając cza
 przetwarzania na trzech różnych maszynach oraz popyt rynkowy. Celem modelu jest
 maksymalizacja zysku.
 
-\subsection*{Zmienne decyzyjne}
+\subsection{Parametry}
+\begin{itemize}
+  \item \( n \): liczba wyrobów,
+  \item \( m \): liczba maszyn,
+  \item \( p_i \): cena sprzedaży wyrobu \( P_i \),
+  \item \( m_i \): koszt materiałowy na kilogram wyrobu \( P_i \),
+  \item \( k_j \): koszt pracy maszyny \( M_j \) za minutę,
+  \item \( t_{ij} \): czas przetwarzania wyrobu \( P_i \) na maszynie \( M_j
+        \),
+  \item \( c_j \): dostępny czas pracy dla maszyny \( M_j \),
+  \item \( d_i \): maksymalny popyt na wyrób \( P_i \).
+\end{itemize}
+
+\subsection{Zmienne decyzyjne}
 Definiujemy zmienne decyzyjne \( x_{ij} \), które reprezentują ilość kilogramów
 wyrobu \( P_i \), produkowanego na maszynie \( M_j \), gdzie:
 \[
@@ -74,7 +149,7 @@ wyrobu \( P_i \), produkowanego na maszynie \( M_j \), gdzie:
 \]
 oraz \( x_{ij} \) jest liczbą całkowitą.
 
-\subsection*{Funkcja celu}
+\subsection{Funkcja celu}
 Celem jest maksymalizacja zysku, który można wyrazić jako różnicę między
 przychodem ze sprzedaży wyrobów a kosztami zmiennymi, które obejmują koszty
 materiałów oraz koszty pracy maszyn. Funkcja celu przyjmuje postać:
@@ -83,16 +158,7 @@ materiałów oraz koszty pracy maszyn. Funkcja celu przyjmuje postać:
   - k_j \cdot t_{ij} \cdot x_{ij} \right)
 \]
 
-gdzie:
-\begin{itemize}
-  \item \( p_i \): cena sprzedaży wyrobu \( P_i \),
-  \item \( m_i \): koszt materiałowy na kilogram wyrobu \( P_i \),
-  \item \( k_j \): koszt pracy maszyny \( M_j \) za minutę,
-  \item \( t_{ij} \): czas przetwarzania jednego kilograma wyrobu \( P_i \) na
-        maszynie \( M_j \).
-\end{itemize}
-
-\subsection*{Ograniczenia}
+\subsection{Ograniczenia}
 \begin{enumerate}
   \item \textbf{Ograniczenia dostępności czasu pracy maszyn}: Każda maszyna \(
         M_j \) jest dostępna tylko przez określoną liczbę minut tygodniowo,
@@ -111,6 +177,62 @@ gdzie:
         \]
 \end{enumerate}
 
+\subsection{Egzemplarz}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \( t_{ij} \) & Maszyna 1 & Maszyna 2 & Maszyna 3 \\
+    \hline
+    \( P_1 \)    & 5         & 10        & 6         \\
+    \( P_2 \)    & 3         & 6         & 4         \\
+    \( P_3 \)    & 4         & 5         & 3         \\
+    \( P_4 \)    & 4         & 2         & 1         \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|}
+    \hline
+              & \( d_i \) & \( m_i \) \\
+    \hline
+    \( P_1 \) & 400       & 4         \\
+    \( P_2 \) & 100       & 1         \\
+    \( P_3 \) & 150       & 1         \\
+    \( P_4 \) & 500       & 1         \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|}
+    \hline
+              & \( k_j \) & \( c_j \) \\
+    \hline
+    Maszyna 1 & 2         & 3600      \\
+    Maszyna 2 & 2         & 3600      \\
+    Maszyna 3 & 3         & 3600      \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Rozwiązanie}
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \( x_{ij} \) & Maszyna 1 & Maszyna 2 & Maszyna 3 \\
+    \hline
+    \( P_1 \)    & 400       & 0         & 0         \\
+    \( P_2 \)    & 100       & 0         & 0         \\
+    \( P_3 \)    & 150       & 0         & 0         \\
+    \( P_4 \)    & 0         & 0         & 500       \\
+    \hline
+  \end{tabular}
+\end{center}
+
+Profit = 5228 $\frac{1}{3}$ \$
+
 \section{Zadanie 3}
 
 Model ten rozwiązuje problem optymalizacji produkcji i magazynowania towarów w
@@ -119,7 +241,20 @@ oraz dodatkowym, przy czym produkcja dodatkowa wiąże się z wyższym kosztem
 jednostkowym. Firma musi spełnić zapotrzebowanie w każdym z okresów przy
 minimalizacji kosztów produkcji i magazynowania.
 
-\subsection*{Zmienne decyzyjne}
+\subsection{Parametry}
+\begin{itemize}
+  \item \( K \): liczba okresów,
+  \item \( c_j \): koszt produkcji w trybie podstawowym w okresie \( j \),
+  \item \( o_j \): koszt produkcji w trybie dodatkowym w okresie \( j \),
+  \item \( h \): koszt magazynowania towaru przez jeden okres,
+  \item \( b_j \): maksymalna produkcja podstawowa w okresie \( j \),
+  \item \( a_j \): maksymalna produkcja dodatkowa w okresie \( j \),
+  \item \( d_j \): zapotrzebowanie w okresie \( j \),
+  \item \( s_0 \): początkowy stan magazynu,
+  \item \( S \): maksymalna pojemność magazynu.
+\end{itemize}
+
+\subsection{Zmienne decyzyjne}
 Wprowadzamy następujące zmienne decyzyjne:
 \begin{itemize}
   \item \( x_j \): liczba jednostek wyprodukowanych w trybie podstawowym w
@@ -130,22 +265,14 @@ Wprowadzamy następujące zmienne decyzyjne:
         koniec okresu \( j \), gdzie \( s_j \geq 0 \).
 \end{itemize}
 
-\subsection*{Funkcja celu}
+\subsection{Funkcja celu}
 Celem jest minimalizacja łącznych kosztów produkcji i magazynowania towaru.
 Funkcja celu przyjmuje postać:
 \[
   \min \sum_{j=1}^K \left( c_j x_j + o_j y_j + h s_j \right)
 \]
-gdzie:
-\begin{itemize}
-  \item \( c_j \): koszt produkcji jednej jednostki w trybie podstawowym w
-        okresie \( j \),
-  \item \( o_j \): koszt produkcji jednej jednostki w trybie dodatkowym w
-        okresie \( j \),
-  \item \( h \): koszt magazynowania jednej jednostki towaru przez jeden okres.
-\end{itemize}
 
-\subsection*{Ograniczenia}
+\subsection{Ograniczenia}
 \begin{enumerate}
   \item \textbf{Ograniczenia zdolności produkcyjnych}:
         \[
@@ -188,17 +315,18 @@ Problem ten dotyczy znalezienia najtańszego połączenia między dwoma miastami
 sieci połączeń, gdzie całkowity czas przejazdu nie może przekroczyć zadanego
 limitu.
 
-\subsection*{Model matematyczny}
-Model ten jest reprezentowany przez skierowany graf \( G = (N, A) \), gdzie:
+\subsection{Parametry}
 \begin{itemize}
-  \item \( N \): zbiór miast, numerowanych od \( 1 \) do \( 10 \),
+  \item \( N \): zbiór miast,
   \item \( A \): zbiór połączeń między miastami, każdy w postaci \( (i, j,
         c_{ij}, t_{ij}) \), gdzie \( c_{ij} \) to koszt przejazdu, a \( t_{ij}
-        \) to
-        czas przejazdu.
+        \) to czas przejazdu,
+  \item \( i^\circ \): miasto początkowe,
+  \item \( j^\circ \): miasto docelowe,
+  \item \( T \): maksymalny dopuszczalny czas przejazdu.
 \end{itemize}
 
-\subsection*{Zmienne decyzyjne}
+\subsection{Zmienne decyzyjne}
 \begin{itemize}
   \item \( x_{ij} \): zmienna decyzyjna, która przyjmuje wartość \( 1 \),
         jeśli połączenie z miasta \( i \) do miasta \( j \) jest używane w
@@ -206,13 +334,13 @@ Model ten jest reprezentowany przez skierowany graf \( G = (N, A) \), gdzie:
         ścieżce, i \( 0 \) w przeciwnym przypadku.
 \end{itemize}
 
-\subsection*{Funkcja celu}
+\subsection{Funkcja celu}
 Minimalizacja całkowitego kosztu przejazdu:
 \[
   \min \sum_{(i, j) \in A} c_{ij} \cdot x_{ij}
 \]
 
-\subsection*{Ograniczenia}
+\subsection{Ograniczenia}
 \begin{enumerate}
   \item \textbf{Ograniczenie dotyczące istniejących połaczeń}:
         \[
@@ -242,7 +370,7 @@ Minimalizacja całkowitego kosztu przejazdu:
         \]
 \end{enumerate}
 
-\subsection*{Część (a) Rozwiązanie dla przykładowego problemu}
+\subsection{Część (a) Rozwiązanie dla przykładowego problemu}
 Dane dla egzemplarza problemu to:
 \begin{itemize}
   \item \( N = \{1, \dots, 10\} \),
@@ -262,7 +390,7 @@ Dane dla egzemplarza problemu to:
 Po zastosowaniu modelu kodem w Julia (JuMP), wyznaczamy optymalną ścieżkę
 minimalizującą koszt przejazdu w zadanym czasie \( T \).
 
-\subsection*{Część (b) Propozycja własnego egzemplarza problemu}
+\subsection{Część (b) Propozycja własnego egzemplarza problemu}
 Tworzymy problem z co najmniej \( 10 \) miastami i krawędziami tak dobranymi,
 aby najtańsza trasa spełniająca ograniczenie czasu miała co najmniej \( 3 \)
 krawędzie i większy koszt niż najtańsza trasa bez ograniczeń. Przykład może
@@ -276,7 +404,7 @@ obejmować:
 Rozwiązując model, znajdziemy ścieżkę spełniającą ograniczenia czasu oraz
 drugą, najtańszą trasę bez tego ograniczenia.
 
-\subsection*{Część (c) Czy zmienne całkowitoliczbowe są konieczne?}
+\subsection{Część (c) Czy zmienne całkowitoliczbowe są konieczne?}
 Ograniczenie na całkowitoliczbowość jest potrzebne. Bez tego model nie zapewni
 wyraźnego wyboru połączeń w ścieżce, co prowadziłoby do wyników w postaci
 ułamkowej – czyli częściowych przejazdów między miastami. Przykładowo, dla
@@ -284,7 +412,7 @@ ułamkowej – czyli częściowych przejazdów między miastami. Przykładowo, d
 ograniczeń, optymalizacja mogłaby wyznaczyć połączenia z wartościami
 ułamkowymi, co jest nielogiczne dla problemu tras przejazdu.
 
-\subsection*{Część (d) Usunięcie ograniczenia czasu i wpływ na poprawność
+\subsection{Część (d) Usunięcie ograniczenia czasu i wpływ na poprawność
   rozwiązania}
 Jeśli usuniemy ograniczenie na czas przejazdu, otrzymana ścieżka minimalizująca
 koszty niekoniecznie będzie spełniać wcześniejsze ograniczenie czasowe. Zatem,
@@ -299,49 +427,57 @@ miasteczku, z uwzględnieniem minimalnych i maksymalnych liczby radiowozów dla
 każdej zmiany oraz minimalnych wymagań dla dzielnic i zmian. Model oparty jest
 na programowaniu liniowym i wykorzystuje bibliotekę JuMP do optymalizacji.
 
-\subsection*{Zmienne decyzyjne}
-Definiujemy zmienne decyzyjne \( x_{ijk} \), które reprezentują liczbę
-radiowozów przydzielonych do dzielnicy \( i \) w zmianie \( j \), gdzie:
-\[
-  x_{ijk} \geq 0
-\]
-oraz \( x_{ijk} \) jest liczbą całkowitą.
+\subsection{Parametry}
+\begin{itemize}
+  \item \( m \): liczba dzielnic,
+  \item \( n \): liczba zmian,
+  \item \( Min_{ij} \): minimalna liczba radiowozów dla danej dzielnicy i
+        zmiany,
+  \item \( Max_{ij} \): maksymalna liczba radiowozów dla danej dzielnicy i
+        zmiany,
+  \item \( m_j \): minimalna liczba radiowozów dla danej zmiany,
+  \item \( d_i \): minimalna liczba radiowozów dla danej dzielnicy.
+\end{itemize}
 
-\subsection*{Funkcja celu}
+\subsection{Zmienne decyzyjne}
+Definiujemy zmienne decyzyjne \( x_{ij} \), które reprezentują liczbę
+radiowozów przydzielonych do dzielnicy \( i \) w zmianie \( j \):
+\[
+  x_{ij} \geq 0
+\]
+
+\subsection{Funkcja celu}
 Celem jest minimalizacja całkowitej liczby radiowozów. Funkcja celu wyraża się
 następująco:
 \[
-  \min \sum_{i=1}^{3} \sum_{j=1}^{3} x_{ijk}
+  \min \sum_{i=1}^{m} \sum_{j=1}^{n} x_{ij}
 \]
-gdzie:
-\begin{itemize}
-  \item \( 3 \): liczba dzielnic (p1, p2, p3),
-  \item \( 3 \): liczba zmian.
-\end{itemize}
 
-\subsection*{Ograniczenia}
+\subsection{Ograniczenia}
 \begin{enumerate}
   \item \textbf{Ograniczenia minimalnej liczby radiowozów dla każdej zmiany}:
         Dla każdej zmiany \( j \) muszą być dostępne określone liczby
         radiowozów, oznaczone jako \( m_j \). Ograniczenia te mają postać:
         \[
-          \sum_{i=1}^{3} x_{ijk} \geq m_j
+          \sum_{i=1}^{m} x_{ij} \geq m_j
         \]
 
   \item \textbf{Ograniczenia minimalnej liczby radiowozów dla dzielnic}:
         Każda dzielnica \( i \) powinna mieć przypisaną określoną minimalną
-        liczbę radiowozów, oznaczoną jako \( d_i \). Ograniczenie dla każdej dzielnicy
+        liczbę radiowozów, oznaczoną jako \( d_i \). Ograniczenie dla każdej
+        dzielnicy
         ma postać:
         \[
-          \sum_{j=1}^{3} x_{ijk} \geq d_i
+          \sum_{j=1}^{n} x_{ij} \geq d_i
         \]
 
-  \item \textbf{Ograniczenia maksymalnej liczby radiowozów dla każdej zmiany i
+  \item \textbf{Ograniczenia minimalnej i maksymalnej liczby radiowozów dla
+          każdej zmiany i
           dzielnicy}:
         Dla każdej dzielnicy \( i \) i każdej zmiany \( j \) nie może być
-        więcej radiowozów niż maksymalna liczba, oznaczona jako \( M_{ij} \):
+        więcej radiowozów niż maksymalna liczba i mniej niż minimalna liczba:
         \[
-          x_{ijk} \leq M_{ij}
+          Min_{ij} \leq x_{ij} \leq Max_{ij}
         \]
 \end{enumerate}
 
@@ -353,7 +489,15 @@ siatkę o wymiarach \( m \times n \), a kamery muszą być umieszczone w taki
 sposób, aby każdy kontener był monitorowany przez co najmniej jedną kamerę.
 Celem jest minimalizacja liczby użytych kamer.
 
-\subsection*{Zmienne decyzyjne}
+\subsection{Parametry}
+\begin{itemize}
+  \item \( C_{ij} \in \{0, 1\} \): rozmieszczenie kontenerów,
+  \item \( k \): zasięg kamery,
+  \item \( m \): liczba wierszy w siatce,
+  \item \( n \): liczba kolumn w siatce.
+\end{itemize}
+
+\subsection{Zmienne decyzyjne}
 Definiujemy zmienne decyzyjne \( x_{ij} \), które reprezentują, czy kamera jest
 umieszczona w kwadracie \( (i, j) \):
 \[
@@ -361,32 +505,27 @@ umieszczona w kwadracie \( (i, j) \):
 \]
 oraz \( x_{ij} \) jest liczbą całkowitą (0 lub 1).
 
-\subsection*{Funkcja celu}
+\subsection{Funkcja celu}
 Celem jest minimalizacja liczby kamer:
 \[
   \min \sum_{i=1}^{m} \sum_{j=1}^{n} x_{ij}
 \]
-gdzie:
-\begin{itemize}
-  \item \( m \): liczba wierszy w siatce,
-  \item \( n \): liczba kolumn w siatce.
-\end{itemize}
 
-\subsection*{Ograniczenia}
+\subsection{Ograniczenia}
 \begin{enumerate}
   \item \textbf{Ograniczenie dotyczące kontenerów}:
         Dla każdego kontenera \( (i, j) \) musi być spełniony warunek, że suma
         kamer w zasięgu wynosi co najmniej 1:
         \[
-          \sum_{k=max(i-k, 1)}^{min(i+k, m)} \sum_{l=max(j-k, 1)}^{min(j+k, n)}
-          x_{kl} \geq 1
+          \sum_{k=\max(i-k, 1)}^{\min(i+k, m)} x_{kj} + \sum_{l=\max(j-k,
+            1)}^{\min(j+k, n)}
+          x_{il} \geq 1
         \]
-        gdzie \( k \) to zasięg kamery.
 
   \item \textbf{Ograniczenie dotyczące braku kamer w kontenerach}:
         Nie można umieszczać kamer w kwadratach zajmowanych przez kontenery:
         \[
-          x_{ij} = 0 \quad \text{jeżeli } containers_{ij} = 1
+          x_{ij} = 0 \quad \text{jeżeli} \quad C_{ij} = 1
         \]
 \end{enumerate}
 
