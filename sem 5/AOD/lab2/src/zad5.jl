@@ -10,7 +10,7 @@ function solve(min_cars_matrix::Matrix, max_cars_matrix::Matrix, min_car_per_shi
 	set_silent(model)
 
     # Liczb użytych radiowozów
-	@variable(model, 0 <= cars_used[1:m, 1:n], Int)
+	@variable(model, 0 <= cars_used[1:m, 1:n]) #, Int)
 
     # Wszystkie ograniczenia 
 	@constraint(model, min_cars_matrix .<= cars_used .<= max_cars_matrix)

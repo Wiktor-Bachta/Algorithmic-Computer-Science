@@ -51,6 +51,6 @@ containers_matrix = [
 	0 1 1 0 1;
 	1 0 1 0 0]
 
-camera_range = 3
+camera_range = 2
 
 solve(containers_matrix, camera_range)

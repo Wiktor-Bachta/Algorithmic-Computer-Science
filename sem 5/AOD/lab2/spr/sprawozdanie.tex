@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath}
+\usepackage{caption}
 \title{AOD - sprawozdanie nr 2}
 \author{Wiktor Bachta}
 \date{Listopad 2024}
@@ -10,12 +11,16 @@
 
 \maketitle
 
+\section{Wstęp}
+
+Wszystkie zadania rozwiązałem w języku Julia z wykorzystaniem biblioteki JuMP
+oraz GLPK.
+
 \section{Zadanie 1}
 
 Model ten rozwiązuje problem minimalizacji kosztów zakupu paliwa dla
 przedsiębiorstwa lotniczego, które musi dostarczyć określoną ilość paliwa na
-lotniska od różnych dostawców. Model oparty jest na programowaniu
-liniowym i wykorzystuje bibliotekę JuMP do optymalizacji.
+lotniska od różnych dostawców.
 
 \subsection{Parametry}
 \begin{itemize}
@@ -33,7 +38,6 @@ dostarczanego przez firmę \( i \) na lotnisko \( j \), gdzie:
 \[
   x_{ij} \geq 0
 \]
-oraz \( x_{ij} \) jest liczbą całkowitą.
 
 \subsection{Funkcja celu}
 Celem jest minimalizacja całkowitego kosztu dostarczenia paliwa. Koszt
@@ -141,40 +145,39 @@ maksymalizacja zysku.
   \item \( d_i \): maksymalny popyt na wyrób \( P_i \).
 \end{itemize}
 
-\subsection{Zmienne decyzyjne}
-Definiujemy zmienne decyzyjne \( x_{ij} \), które reprezentują ilość kilogramów
-wyrobu \( P_i \), produkowanego na maszynie \( M_j \), gdzie:
-\[
-  x_{ij} \geq 0
-\]
-oraz \( x_{ij} \) jest liczbą całkowitą.
+\subsection{Zmienna decyzyjna}
+
+\( x_i \): liczba kilogramów produktu \( P_i \), które
+należy
+wyprodukować.
 
 \subsection{Funkcja celu}
 Celem jest maksymalizacja zysku, który można wyrazić jako różnicę między
 przychodem ze sprzedaży wyrobów a kosztami zmiennymi, które obejmują koszty
 materiałów oraz koszty pracy maszyn. Funkcja celu przyjmuje postać:
 \[
-  \max \sum_{i=1}^n \sum_{j=1}^m \left( \left( p_i - m_i \right) \cdot	x_{ij}
-  - k_j \cdot t_{ij} \cdot x_{ij} \right)
+  \max \left( \sum_{i=1}^n \left( p_i - m_i \right) x_i - \sum_{j=1}^m k_j
+  \cdot \sum_{i=1}^n t_{ij} \cdot x_i \right)
 \]
 
 \subsection{Ograniczenia}
+
 \begin{enumerate}
   \item \textbf{Ograniczenia dostępności czasu pracy maszyn}: Każda maszyna \(
-        M_j \) jest dostępna tylko przez określoną liczbę minut tygodniowo,
-        oznaczoną
-        jako \( c_j \). Dla każdej maszyny \( M_j \) formułujemy ograniczenie:
+        M_j \) ma ograniczony tygodniowy czas pracy, oznaczony jako \( c_j \),
+        co
+        formułujemy jako:
         \[
-          \sum_{i=1}^n t_{ij} \cdot x_{ij} \leq c_j
+          \sum_{i=1}^n t_{ij} \cdot x_i \leq c_j, \quad j = 1, \dots, m
         \]
 
-  \item \textbf{Ograniczenia popytu rynkowego}: Każdy produkt \( P_i \) ma
-        maksymalny popyt rynkowy, oznaczony jako \( d_i \). Dla każdego wyrobu
-        \( P_i
-        \) formułujemy ograniczenie:
+  \item \textbf{Ograniczenia popytu rynkowego}: Każdy produkt \( P_i \) posiada
+        maksymalny popyt rynkowy oznaczony jako \( d_i \), co prowadzi do
+        ograniczenia:
         \[
-          \sum_{j=1}^m x_{ij} \leq d_i
+          x_i \leq d_i, \quad i = 1, \dots, n
         \]
+
 \end{enumerate}
 
 \subsection{Egzemplarz}
@@ -219,19 +222,19 @@ materiałów oraz koszty pracy maszyn. Funkcja celu przyjmuje postać:
 
 \subsection{Rozwiązanie}
 \begin{center}
-  \begin{tabular}{|c|c|c|c|}
+  \begin{tabular}{|c|c|}
     \hline
-    \( x_{ij} \) & Maszyna 1 & Maszyna 2 & Maszyna 3 \\
+              & \( x_{i} \) \\
     \hline
-    \( P_1 \)    & 400       & 0         & 0         \\
-    \( P_2 \)    & 100       & 0         & 0         \\
-    \( P_3 \)    & 150       & 0         & 0         \\
-    \( P_4 \)    & 0         & 0         & 500       \\
+    \( P_1 \) & 125         \\
+    \( P_2 \) & 100         \\
+    \( P_3 \) & 150         \\
+    \( P_4 \) & 500         \\
     \hline
   \end{tabular}
 \end{center}
 
-Profit = 5228 $\frac{1}{3}$ \$
+Profit = 3632 $\frac{1}{2}$ \$
 
 \section{Zadanie 3}
 
@@ -308,7 +311,60 @@ Funkcja celu przyjmuje postać:
         okresu \( s_{K+1} = 0 \), co oznacza, że na koniec cyklu produkcyjnego
         magazyn
         ma zostać opróżniony.
+
+  \item Niepotrzebne jest ograniczenie na wykorzystanie zasobu produktów
+        bazowych przed rozpoczęciem dodatkowych,
+        za względu na ich większy koszt produkcji.
 \end{enumerate}
+
+\subsection{Egzemplarz}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \( j \) & \( b_j \) & \( a_j \) & \( c_j \) & \( o_j \) & \( d_j \) \\
+    \hline
+    1       & 100       & 60        & 6000      & 8000      & 130       \\
+    2       & 100       & 65        & 4000      & 6000      & 80        \\
+    3       & 100       & 70        & 8000      & 10000     & 125       \\
+    4       & 100       & 60        & 9000      & 11000     & 195       \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{|c|c|}
+    \hline
+    \( h \)   & 1500 \\
+    \( s_0 \) & 15   \\
+    \( S \)   & 70   \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Rozwiązanie}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \( j \) & \( x_j \) & \( y_j \) & \( s_j \) \\
+    \hline
+    1       & 100       & 15        & 15        \\
+    2       & 100       & 50        & 0         \\
+    3       & 100       & 0         & 70        \\
+    4       & 100       & 50        & 45        \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{itemize}
+  \item Jaki jest minimalny łączny koszt produkcji i magazynowania towaru? \\
+        3842500\$
+  \item W których okresach firma musi zaplanowac produkcję ponadwymiarową? \\ W
+        okresach 1,2 oraz 4
+  \item W których okresach mozliwości magazynowania towaru są wyczerpane?  \\
+        Przy nocy 2 -> 3 okres
+\end{itemize}
 
 \section{Zadanie 4}
 Problem ten dotyczy znalezienia najtańszego połączenia między dwoma miastami w
@@ -364,68 +420,186 @@ Minimalizacja całkowitego kosztu przejazdu:
 
   \item \textbf{Warunek przepływu dla pozostałych miast}:
         Każde miasto \( k \in N \), poza \( i^\circ \) i \( j^\circ \), ma tyle
-        samo połączeń wchodzących, ile wychodzących:
+        samo połączeń wchodzących, ile wychodzących. W rzeczywistości będzie to
+        0 lub 1 połączenie,
+        bo wracanie do tego samego miasta nieporzebnie przedłuża podróż (czas i
+        koszt).
         \[
           \sum_{j : (k, j) \in A} x_{kj} = \sum_{i : (i, k) \in A} x_{ik}
         \]
 \end{enumerate}
 
-\subsection{Część (a) Rozwiązanie dla przykładowego problemu}
-Dane dla egzemplarza problemu to:
+\subsection{Egzemplarz}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \( i \) & \( j \) & \( c_{ij} \) & \( t_{ij} \) \\
+    \hline
+    1       & 2       & 3            & 4            \\
+    1       & 3       & 4            & 9            \\
+    1       & 4       & 7            & 10           \\
+    1       & 5       & 8            & 12           \\
+    2       & 3       & 2            & 3            \\
+    3       & 4       & 4            & 6            \\
+    3       & 5       & 2            & 2            \\
+    3       & 10      & 6            & 11           \\
+    4       & 5       & 1            & 1            \\
+    4       & 7       & 3            & 5            \\
+    5       & 6       & 5            & 6            \\
+    5       & 7       & 3            & 3            \\
+    5       & 10      & 5            & 8            \\
+    6       & 1       & 5            & 8            \\
+    6       & 7       & 2            & 2            \\
+    6       & 10      & 7            & 11           \\
+    7       & 3       & 4            & 6            \\
+    7       & 8       & 3            & 5            \\
+    7       & 9       & 1            & 1            \\
+    8       & 9       & 1            & 2            \\
+    9       & 10      & 2            & 2            \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{|c|c|}
+    \hline
+    \( N \)       & \{0, 1, \dots, 10\} \\
+    \( i^\circ \) & 1                   \\
+    \( j^\circ \) & 10                  \\
+    \( T \)       & 15                  \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Rozwiązanie}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \( i \) & \( j \) & \( c_{ij} \) & \( t_{ij} \) \\
+    \hline
+    1       & 2       & 3            & 4            \\
+    2       & 3       & 2            & 3            \\
+    3       & 5       & 2            & 2            \\
+    5       & 7       & 3            & 3            \\
+    7       & 9       & 1            & 1            \\
+    9       & 10      & 2            & 2            \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{|c|c|}
+    \hline
+    Czas  & 15 \\
+    Koszt & 13 \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Egzemplarz 2}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \( i \) & \( j \) & \( c_{ij} \) & \( t_{ij} \) \\
+    \hline
+    1       & 2       & 5            & 4            \\
+    2       & 3       & 4            & 2            \\
+    3       & 10      & 7            & 6            \\
+    1       & 4       & 6            & 5            \\
+    4       & 10      & 4            & 8            \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{|c|c|}
+    \hline
+    \( N \)       & \{0, 1, \dots, 10\} \\
+    \( i^\circ \) & 1                   \\
+    \( j^\circ \) & 10                  \\
+    \( T \)       & 12                  \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Rozwiązanie 2}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \( i \) & \( j \) & \( c_{ij} \) & \( t_{ij} \) \\
+    \hline
+    1       & 2       & 5            & 4            \\
+    2       & 3       & 4            & 2            \\
+    3       & 10      & 7            & 6            \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{|c|c|}
+    \hline
+    Czas  & 12 \\
+    Koszt & 16 \\
+    \hline
+  \end{tabular}
+\end{center}
+
 \begin{itemize}
-  \item \( N = \{1, \dots, 10\} \),
-  \item \( i^\circ = 1 \), \( j^\circ = 10 \),
-  \item \( T = 15 \),
-  \item Krawędzie wraz z kosztami \( c_{ij} \) i czasami \( t_{ij} \):\\
-        \( (1, 2, 3, 4), (1, 3, 4, 9), (1, 4, 7, 10), (1, 5, 8, 12), (2, 3, 2,
-        3),
-        (3, 4, 4, 6), (3, 5, 2, 2), (3, 10, 6, 11), \\
-        (4, 5, 1, 1), (4, 7, 3, 5), (5, 6, 5, 6), (5, 7, 3, 3), (5, 10, 5, 8),
-        (6,
-        1, 5, 8), (6, 7, 2, 2), (6, 10, 7, 11), \\
-        (7, 3, 4, 6), (7, 8, 3, 5), (7, 9, 1, 1), (8, 9, 1, 2), (9, 10, 2, 2)
-        \).
+  \item Czy zmienne całkowitoliczbowe są konieczne? \\
+        Czy po usunięciu ograniczenia na czasy przejazdu w modelu bez
+        ograniczeń na całkowitoliczbowość zmiennych decyzyjnych i rozwiązaniu
+        problemu
+        otrzymane połączenie zawsze jest akceptowalnym rozwiązaniem? \\
+        Ograniczenie to nie jest potrzebne. Po jego zdjęciu otrzymujemy takie
+        samo rozwiązanie.
+        Pomijając ograniczenie czasu, problem możemy zaprezentować jako $ M
+          x = b $
+        gdzie M to macierz ograniczeń (macierz incydencji grafu),
+        x to wektor przepływu na krawędziach i b to wektor prawych stron.
+        $ \\ b(i^\circ) = 1 \\ b(j^\circ) = -1 \\ b(a) = 0, a \neq i^\circ,
+          j^\circ \\ $
+        Ponieważ M jest całkowicie unimodularna i b jest wektorem liczb
+        całkowitych,
+        każde podstawowe rozwiązanie jest całkowitoliczbowe.
+        Dodanie ponownie ograniczenia czasu zburza jednak całkowitoliczbowość.
 \end{itemize}
 
-Po zastosowaniu modelu kodem w Julia (JuMP), wyznaczamy optymalną ścieżkę
-minimalizującą koszt przejazdu w zadanym czasie \( T \).
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \( i \) & \( j \) & \( c_{ij} \) & \( t_{ij} \) \\
+    \hline
+    1       & 2       & 1            & 3            \\
+    2       & 10      & 1            & 3            \\
+    1       & 10      & 1            & 9            \\
+    \hline
+  \end{tabular}
+\end{center}
 
-\subsection{Część (b) Propozycja własnego egzemplarza problemu}
-Tworzymy problem z co najmniej \( 10 \) miastami i krawędziami tak dobranymi,
-aby najtańsza trasa spełniająca ograniczenie czasu miała co najmniej \( 3 \)
-krawędzie i większy koszt niż najtańsza trasa bez ograniczeń. Przykład może
-obejmować:
-\begin{itemize}
-  \item \( N = \{1, \dots, 10\} \),
-  \item \( i^\circ = 1 \), \( j^\circ = 10 \), \( T = 12 \),
-  \item Krawędzie: \( (1, 2, 5, 4), (2, 3, 4, 2), (3, 10, 7, 6), (1, 4, 6,
-        5), (4, 10, 4, 4) \).
-\end{itemize}
-Rozwiązując model, znajdziemy ścieżkę spełniającą ograniczenia czasu oraz
-drugą, najtańszą trasę bez tego ograniczenia.
+\begin{center}
+  \begin{tabular}{|c|c|}
+    \hline
+    \( N \)       & \{0, 1, \dots, 10\} \\
+    \( i^\circ \) & 1                   \\
+    \( j^\circ \) & 10                  \\
+    \( T \)       & 8                   \\
+    \hline
+  \end{tabular}
+\end{center}
 
-\subsection{Część (c) Czy zmienne całkowitoliczbowe są konieczne?}
-Ograniczenie na całkowitoliczbowość jest potrzebne. Bez tego model nie zapewni
-wyraźnego wyboru połączeń w ścieżce, co prowadziłoby do wyników w postaci
-ułamkowej – czyli częściowych przejazdów między miastami. Przykładowo, dla
-ścieżki \( (1 \to 2), (2 \to 10) \) przy założeniu minimalizacji kosztów bez
-ograniczeń, optymalizacja mogłaby wyznaczyć połączenia z wartościami
-ułamkowymi, co jest nielogiczne dla problemu tras przejazdu.
-
-\subsection{Część (d) Usunięcie ograniczenia czasu i wpływ na poprawność
-  rozwiązania}
-Jeśli usuniemy ograniczenie na czas przejazdu, otrzymana ścieżka minimalizująca
-koszty niekoniecznie będzie spełniać wcześniejsze ograniczenie czasowe. Zatem,
-mimo że rozwiązanie optymalizacyjne bez ograniczeń będzie miało najniższy
-koszt, nie zawsze będzie dopuszczalne, jeśli wciąż zależy nam na spełnieniu
-limitu czasu \( T \).
+Wtedy rozwiązanie optymalne nie jest całkowitoliczbowe.
+\[ Koszt = 1 \frac{1}{3} \]
+Przesyłamy $\frac{1}{3}$ ścieżką długości 2 i $\frac{2}{3}$ ścieżką długości 1.
 
 \section{Zadanie 5}
 
 Model ten rozwiązuje problem przydziału radiowozów do trzech dzielnic w
 miasteczku, z uwzględnieniem minimalnych i maksymalnych liczby radiowozów dla
-każdej zmiany oraz minimalnych wymagań dla dzielnic i zmian. Model oparty jest
-na programowaniu liniowym i wykorzystuje bibliotekę JuMP do optymalizacji.
+każdej zmiany oraz minimalnych wymagań dla dzielnic i zmian.
 
 \subsection{Parametry}
 \begin{itemize}
@@ -481,6 +655,57 @@ następująco:
         \]
 \end{enumerate}
 
+\subsection{Egzemplarz}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \( Min_{ij}, Max_{ij} \) & 1    & 2     & 3     \\
+    \hline
+    1                        & 2, 3 & 4, 5  & 3, 7  \\
+    2                        & 3, 5 & 6, 7  & 5, 10 \\
+    3                        & 5, 8 & 7, 12 & 8, 10 \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+              & 1  & 2  & 3  \\
+    \hline
+    \( m_j \) & 10 & 20 & 18 \\
+    \( d_i \) & 10 & 14 & 13 \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Rozwiązanie}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \( x_{ij} \) & 1 & 2 & 3 \\
+    \hline
+    1            & 2 & 5 & 5 \\
+    2            & 3 & 7 & 5 \\
+    3            & 5 & 8 & 8 \\
+    \hline
+  \end{tabular}
+\end{center}
+
+Liczba radiowozów = 48
+
+\begin{itemize}
+  \item Czy zmienne całkowitoliczbowe są konieczne? \\
+        Ograniczenie to nie jest potrzebne, ponieważ można go zredukować
+        do problemu min cost flow (w szczególności problemu cyrkulacji).
+        Grafem jest źródło (komenda) połączona z dzielnicami (min na
+        krawędziach), a one następnie
+        połączone są ze zmianami (min i max na krawędziach), a te wierzchołki
+        wracają do komendy (min na krawędziach).
+\end{itemize}
+
 \section{Zadanie 6}
 
 Model ten rozwiązuje problem rozmieszczenia kamer w terenie składowym, w którym
@@ -528,5 +753,61 @@ Celem jest minimalizacja liczby kamer:
           x_{ij} = 0 \quad \text{jeżeli} \quad C_{ij} = 1
         \]
 \end{enumerate}
+
+\subsection{Egzemplarz}
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    0 & 0 & 1 & 0 & 0 \\ \hline
+    1 & 0 & 0 & 1 & 0 \\ \hline
+    0 & 1 & 0 & 0 & 0 \\ \hline
+    0 & 0 & 0 & 0 & 0 \\ \hline
+    0 & 1 & 1 & 0 & 1 \\ \hline
+    1 & 0 & 1 & 0 & 0 \\
+    \hline
+  \end{tabular}
+  \captionof{table}{$C_{ij}$}
+\end{center}
+
+\subsection{Rozwiązanie 1}
+
+k = 2
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    0  & 1  & -1 & 0  & 0  \\ \hline
+    -1 & 0  & 1  & -1 & 0  \\ \hline
+    0  & -1 & 0  & 0  & 0  \\ \hline
+    0  & 0  & 0  & 0  & 0  \\ \hline
+    1  & -1 & -1 & 0  & -1 \\ \hline
+    -1 & 0  & -1 & 0  & 1  \\
+    \hline
+  \end{tabular}
+  \captionof{table}{$ x_{ij}, C_{ij} $ oznaczone -1}
+\end{center}
+
+Liczba kamer = 4
+
+\subsection{Rozwiązanie 2}
+
+k = 3
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    0  & 0  & -1 & 0  & 0  \\ \hline
+    -1 & 0  & 0  & -1 & 0  \\ \hline
+    0  & -1 & 1  & 0  & 0  \\ \hline
+    0  & 0  & 0  & 0  & 0  \\ \hline
+    1  & -1 & -1 & 1  & -1 \\ \hline
+    -1 & 0  & -1 & 0  & 0  \\
+    \hline
+  \end{tabular}
+  \captionof{table}{$ x_{ij}, C_{ij} $ oznaczone -1}
+\end{center}
+
+Liczba kamer = 3
 
 \end{document}
